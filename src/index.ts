@@ -1,3 +1,5 @@
-export function hello(name: string): string {
-  return `Hello ${name}`;
-}
+export * from "./xpay";
+
+// export function hello(name: string): string {
+//   return `Hello ${name}`;
+// }
