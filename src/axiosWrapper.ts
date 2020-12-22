@@ -37,10 +37,9 @@ var payUrl = "https://staging.xpay.app/api/v1/payments/pay/variable-amount";
 
 export function pay(
   payBody: PayBody,
-  apiKey: string,
-  success = (payData: PayData) => {}
-) {
-  axios({
+  apiKey: string
+): AxiosPromise<PayResponse> {
+  return axios({
     method: "post",
     url: payUrl,
     data: {
@@ -49,13 +48,7 @@ export function pay(
     headers: {
       "x-api-key": apiKey,
     },
-  })
-    .then((data: AxiosResponse<PayResponse>) => {
-      success(data.data.data);
-    })
-    .catch((e) => {
-      console.log("error", e.response);
-    });
+  });
 }
 
 // transaction endpoint

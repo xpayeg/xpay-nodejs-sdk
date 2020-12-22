@@ -11,12 +11,12 @@ export interface PayBody {
   pay_using: string;
   amount: number;
   currency: string;
-  custom_fields: Customfield;
   billing_data: BillingInfo;
+  custom_fields?: Customfield[];
 }
 
-interface BillingInfo {
+export interface BillingInfo {
   name: string;
   email: string;
-  phone: string;
+  phone_number: string;
 }

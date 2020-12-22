@@ -4,4 +4,5 @@ export interface PayData {
   transaction_status: string;
   transaction_uuid: string;
   message?: string;
+  bill_reference?: number;
 }
