@@ -1,5 +1,5 @@
 // const axios = require('axios').default;
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosPromise, AxiosResponse } from "axios";
 import { PayBody, PrepareAmountBody } from "./interfaces/requests";
 import { PrepareAmountData } from "./interfaces/prepareAmountData";
 import {
@@ -17,10 +17,9 @@ const prepareAmountUrl =
 
 export function prepareAmount(
   prepareAmountBody: PrepareAmountBody,
-  apiKey: string,
-  success = (prepareAmountData: PrepareAmountData) => {}
-) {
-  axios({
+  apiKey: string
+): AxiosPromise<PrepareAmountResponse> {
+  return axios({
     method: "post",
     url: prepareAmountUrl,
     data: {
@@ -29,13 +28,7 @@ export function prepareAmount(
     headers: {
       "x-api-key": apiKey,
     },
-  })
-    .then((data: AxiosResponse<PrepareAmountResponse>) => {
-      success(data.data.data);
-    })
-    .catch((e) => {
-      console.log("error", e.response);
-    });
+  });
 }
 
 // pay endpoint
