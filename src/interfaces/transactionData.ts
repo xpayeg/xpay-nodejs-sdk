@@ -11,5 +11,5 @@ export interface TransactionData {
   quantity: string;
   status: string;
   custom_fields_json: [Customfield];
-  transaction_id: number;
+  total_amount_piasters: number;
 }

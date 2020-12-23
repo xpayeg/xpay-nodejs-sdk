@@ -59,22 +59,17 @@ var TransactionInfoUrl =
 export function getTransactionInfo(
   uuid: string,
   apiKey: string,
-  communityId: string,
-  success = (TransactionData: TransactionData) => {}
-) {
-  TransactionInfoUrl.replace("{community_id}", communityId);
-  TransactionInfoUrl.replace("{transaction_uuid}", uuid);
-  axios({
+  communityId: string
+): AxiosPromise<TransactionResponse> {
+  TransactionInfoUrl = TransactionInfoUrl.replace("{community_id}", communityId);
+  TransactionInfoUrl = TransactionInfoUrl.replace("{transaction_uuid}", uuid);
+  console.log(TransactionInfoUrl);
+  
+  return axios({
     method: "get",
     url: TransactionInfoUrl,
     headers: {
       "x-api-key": apiKey,
     },
-  })
-    .then((data: AxiosResponse<TransactionResponse>) => {
-      success(data.data.data);
-    })
-    .catch((e) => {
-      console.log("error", e.response);
-    });
+  });
 }
