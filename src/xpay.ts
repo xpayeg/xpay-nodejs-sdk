@@ -10,11 +10,12 @@ import { PrepareAmountData } from "./interfaces/prepareAmountData";
 import { PayBody, PrepareAmountBody, BillingInfo } from "./interfaces/requests";
 import { PayResponse, PrepareAmountResponse } from "./interfaces/responses";
 
-export namespace Xpay {
-  export class payment {
+// export namespace Xpay {
+  export class Xpay {
     apiKey: string;
     communityId: string;
     apiPaymentId: number;
+    customFields: Customfield[];
 
     private _activePaymentMethods: PaymentMethod[];
     public get activePaymentMethods(): PaymentMethod[] {
@@ -30,7 +31,9 @@ export namespace Xpay {
       this.apiKey = apiKey;
       this.communityId = communityId;
       this.apiPaymentId = apiPaymentId;
+
       this._activePaymentMethods = [];
+      this.customFields = [];
       this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
       // this.apiKey = "Cce74Y3B.J0P4tItq7hGu2ddhCB0WF5ND1eTubkpT";
       // this.communityId = "m2J7eBK";
@@ -79,12 +82,21 @@ export namespace Xpay {
             pay_using: paymentMethod,
             billing_data: billingInfo,
           };
-          if (customFields) {
+
+          if (customFields && customFields?.length > 0) {
             payRequestBody.custom_fields = customFields;
+          } else if (this.customFields && this.customFields?.length > 0) {
+            payRequestBody.custom_fields = this.customFields;
           }
+
           return pay(payRequestBody, this.apiKey).then(
             (response: AxiosResponse<PayResponse>) => {
               const payData = response.data.data;
+              // clear current payment settings
+              this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
+              this._activePaymentMethods = [];
+              this.customFields = [];
+              // return payment info
               return payData;
             }
           );
@@ -96,4 +108,4 @@ export namespace Xpay {
       console.log(m);
     }
   }
-}
+// }

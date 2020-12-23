@@ -1,6 +1,6 @@
 import { Xpay } from "./xpay";
 
-export default Xpay;
+export { Xpay };
 
 Object.assign(module.exports, Xpay);
 // export function hello(name: string): string {
