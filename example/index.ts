@@ -1,5 +1,6 @@
 import { Xpay } from "../dist/xpay";
 import { PaymentMethod } from "../dist/interfaces/payments";
+import { Utils } from "../dist/utils";
 
 console.log("script started!");
 
@@ -13,8 +14,8 @@ let payment = new Xpay(
 // processPayment();
 // getTransaction();
 
-// console.log(payment.verifyName("john doe"));
-// console.log(payment.verifyEmail("support@xpay.app"));
+console.log(Utils.validateName("john doe"));
+console.log(Utils.validateEmail("support@xpay.app"));
 
 function getTransaction() {
   payment
@@ -23,13 +24,6 @@ function getTransaction() {
       console.log("Transaction data:", res);
     })
     .catch((e) => console.log(e));
-}
-
-function createCustomFields() {
-  payment.customFields = [
-    { field_label: "field label 1", field_value: "field value 1" },
-    { field_label: "field label 2", field_value: "field value 2" },
-  ];
 }
 
 function processPayment() {
@@ -46,8 +40,11 @@ function processPayment() {
           name: "Islam Rostom",
           email: "irostom@xpay.app",
           phone_number: "+201119045759",
-        }
-        // [{ field_label: "hello", field_value: "you" }]
+        },
+        [
+          { field_label: "field label 1", field_value: "field value 1" },
+          { field_label: "field label 2", field_value: "field value 2" },
+        ]
       );
     })
     .then((res) => {
@@ -68,5 +65,4 @@ function printPaymentSettings() {
     payment.PaymentOptionsTotalAmounts
   );
   console.log("activePaymentMethods: ", payment.activePaymentMethods);
-  console.log("custom fields: ", payment.customFields);
 }
