@@ -11,7 +11,10 @@ let payment = new Xpay(
 
 // createCustomFields();
 // processPayment();
-getTransaction();
+// getTransaction();
+
+// console.log(payment.verifyName("john doe"));
+// console.log(payment.verifyEmail("support@xpay.app"));
 
 function getTransaction() {
   payment
@@ -21,7 +24,6 @@ function getTransaction() {
     })
     .catch((e) => console.log(e));
 }
-
 
 function createCustomFields() {
   payment.customFields = [
@@ -43,7 +45,7 @@ function processPayment() {
         {
           name: "Islam Rostom",
           email: "irostom@xpay.app",
-          phone_number: "01119045759",
+          phone_number: "+201119045759",
         }
         // [{ field_label: "hello", field_value: "you" }]
       );

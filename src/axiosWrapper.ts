@@ -1,14 +1,10 @@
-// const axios = require('axios').default;
-import axios, { AxiosPromise, AxiosResponse } from "axios";
+import axios, { AxiosPromise } from "axios";
 import { PayBody, PrepareAmountBody } from "./interfaces/requests";
-import { PrepareAmountData } from "./interfaces/prepareAmountData";
 import {
   PayResponse,
   PrepareAmountResponse,
   TransactionResponse,
 } from "./interfaces/responses";
-import { PayData } from "./interfaces/payData";
-import { TransactionData } from "./interfaces/transactionData";
 
 // prepare amount endpoint
 
@@ -61,10 +57,12 @@ export function getTransactionInfo(
   apiKey: string,
   communityId: string
 ): AxiosPromise<TransactionResponse> {
-  TransactionInfoUrl = TransactionInfoUrl.replace("{community_id}", communityId);
+  TransactionInfoUrl = TransactionInfoUrl.replace(
+    "{community_id}",
+    communityId
+  );
   TransactionInfoUrl = TransactionInfoUrl.replace("{transaction_uuid}", uuid);
-  console.log(TransactionInfoUrl);
-  
+
   return axios({
     method: "get",
     url: TransactionInfoUrl,
