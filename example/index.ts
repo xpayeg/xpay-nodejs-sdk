@@ -9,15 +9,19 @@ let payment = new Xpay(
   60
 );
 
-payment
-  .getTransaction("c3b2c863-55e2-4411-aea8-de0bc01a6080")
-  .then((res) => {
-    console.log("Transaction data:", res);
-  })
-  .catch((e) => console.log(e));
-
 // createCustomFields();
 // processPayment();
+getTransaction();
+
+function getTransaction() {
+  payment
+    .getTransaction("c3b2c863-55e2-4411-aea8-de0bc01a6080")
+    .then((res) => {
+      console.log("Transaction data:", res);
+    })
+    .catch((e) => console.log(e));
+}
+
 
 function createCustomFields() {
   payment.customFields = [
