@@ -17,7 +17,6 @@ import {
 import { TransactionData } from "./interfaces/transactionData";
 import { Utils } from "./utils";
 
-// export namespace Xpay {
 export class Xpay {
   apiKey: string;
   communityId: string;
@@ -43,7 +42,6 @@ export class Xpay {
     this.apiKey = apiKey;
     this.communityId = communityId;
     this.apiPaymentId = apiPaymentId;
-
     this.serverSetting = serverSetting ? serverSetting : ServerSetting.Testing;
     this._activePaymentMethods = [];
     this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
@@ -60,7 +58,6 @@ export class Xpay {
       this.serverSetting
     ).then((response: AxiosResponse<PrepareAmountResponse>) => {
       const preparedPayment = response.data.data;
-      // console.log(preparedPayment);
       if (preparedPayment?.total_amount) {
         this._activePaymentMethods?.push(PaymentMethod.CARD);
         this._PaymentOptionsTotalAmounts.card = preparedPayment.total_amount;
@@ -77,45 +74,47 @@ export class Xpay {
   makePayment(
     paymentMethod: PaymentMethod,
     billingInfo: BillingInfo,
-    customFields: Customfield[]
+    customFields?: Customfield[]
   ): Promise<PayData> {
-    // check if the community have any active payment methods
-    // and if the chosen payment method is found in them
+    /* check if the community have any active payment methods
+    and if the chosen payment method is found in them and
+    if a total amount is found for the chosen payment method */
     if (
       this._activePaymentMethods.length > 0 &&
-      this._activePaymentMethods.includes(paymentMethod)
+      this._activePaymentMethods.includes(paymentMethod) &&
+      this._PaymentOptionsTotalAmounts[paymentMethod]
     ) {
-      // if a total amount is found for the chosen payment method
-      if (this._PaymentOptionsTotalAmounts[paymentMethod]) {
-        if (
-          Utils.validateName(billingInfo.name) &&
-          Utils.validateEmail(billingInfo.email) &&
-          Utils.validatePhone(billingInfo.phone_number)
-        ) {
-          // prepare pay endpoint request body
-          const payRequestBody: PayBody = {
-            community_id: this.communityId,
-            variable_amount_id: this.apiPaymentId,
-            currency: "EGP",
-            amount: this._PaymentOptionsTotalAmounts[paymentMethod],
-            pay_using: paymentMethod,
-            billing_data: billingInfo,
-            custom_fields: customFields,
-          };
-          // request payment
-          return pay(payRequestBody, this.apiKey, this.serverSetting).then(
-            (response: AxiosResponse<PayResponse>) => {
-              const payData = response.data.data;
-              // clear current payment settings
-              this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
-              this._activePaymentMethods = [];
-              // return payment info
-              return payData;
-            }
-          );
-        } else throw new Error("billing info is not valid");
-      } else throw new Error("error 2");
-    } else throw new Error(`${paymentMethod} is not available`);
+      if (
+        Utils.validateName(billingInfo.name) &&
+        Utils.validateEmail(billingInfo.email) &&
+        Utils.validatePhone(billingInfo.phone_number)
+      ) {
+        // prepare pay endpoint request body
+        const payRequestBody: PayBody = {
+          community_id: this.communityId,
+          variable_amount_id: this.apiPaymentId,
+          currency: "EGP",
+          amount: this._PaymentOptionsTotalAmounts[paymentMethod],
+          pay_using: paymentMethod,
+          billing_data: billingInfo,
+        };
+
+        if (customFields) {
+          payRequestBody.custom_fields = customFields;
+        }
+
+        // request payment
+        return pay(payRequestBody, this.apiKey, this.serverSetting).then(
+          (response: AxiosResponse<PayResponse>) => {
+            // clear current payment settings
+            this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
+            this._activePaymentMethods = [];
+            // return payment info
+            return response.data.data;
+          }
+        );
+      } else throw new Error("billing info provided is not valid");
+    } else throw new Error("payment method selected is not available");
   }
 
   getTransaction(uuid: string): Promise<TransactionData> {
@@ -125,14 +124,26 @@ export class Xpay {
       this.communityId,
       this.serverSetting
     ).then((response: AxiosResponse<TransactionResponse>) => {
-      const preparedPayment = response.data.data;
-      // console.log(preparedPayment);
-      return preparedPayment;
+      return response.data.data;
     });
   }
 
-  throwError(m: any) {
-    console.log(m);
-  }
+  // private HandleError(error) {
+  //   if (error.response) {
+  //     // The request was made and the server responded with a status code
+  //     // that falls out of the range of 2xx
+  //     console.log(error.response.data);
+  //     console.log(error.response.status);
+  //     console.log(error.response.headers);
+  //   } else if (error.request) {
+  //     // The request was made but no response was received
+  //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+  //     // http.ClientRequest in node.js
+  //     console.log(error.request);
+  //   } else {
+  //     // Something happened in setting up the request that triggered an Error
+  //     console.log("Error", error.message);
+  //   }
+  //   console.log(error.config);
+  // }
 }
-// }

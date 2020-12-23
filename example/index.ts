@@ -10,7 +10,7 @@ let payment = new Xpay(
   60
 );
 
-// processPayment();
+processPayment();
 // getTransaction();
 
 // console.log(Utils.validateName("john doe"));
@@ -51,12 +51,21 @@ function processPayment() {
       console.log("tx info: ", res);
       printPaymentSettings();
     })
-    .catch((e) => {
-      // console.log("error", e.response.data.status.errors[0]);
-      console.log("error", e);
-      throw new Error(e);
+    .catch((error) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data?.status?.errors[0]);
+        console.log(error.response.status);
+        console.log(error.response.statusText);
+      } else if (error.request) {
+        console.log("The request was made but no response was received");
+        console.log("Request: ", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+      }
     });
-  console.log("bye, world!");
 }
 
 function printPaymentSettings() {
