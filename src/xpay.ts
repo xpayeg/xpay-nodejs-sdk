@@ -82,7 +82,8 @@ export class Xpay {
       if (this._PaymentOptionsTotalAmounts[paymentMethod]) {
         if (
           Utils.validateName(billingInfo.name) &&
-          Utils.validateEmail(billingInfo.email)
+          Utils.validateEmail(billingInfo.email) &&
+          Utils.validatePhone(billingInfo.phone_number)
         ) {
           // prepare pay endpoint request body
           const payRequestBody: PayBody = {

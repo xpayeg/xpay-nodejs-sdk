@@ -1,3 +1,5 @@
+import parsePhoneNumber from "libphonenumber-js/max";
+
 export namespace Utils {
   export function validateName(name: string) {
     const regExp = new RegExp(
@@ -11,8 +13,9 @@ export namespace Utils {
     return regExp.test(email);
   }
 
-  //   verifyPhone(phone: string) {
-  //     const regExp = new RegExp(/^[a-z0-9._%+-]+@[a-z.-]+[.][a-z]{2,4}$/);
-  //     return regExp.test(phone);
-  //   }
+  export function validatePhone(phone: string) {
+    const phoneNumber = parsePhoneNumber(phone);
+
+    return phoneNumber?.isValid() ? true : false;
+  }
 }

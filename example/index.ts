@@ -10,12 +10,12 @@ let payment = new Xpay(
   60
 );
 
-// createCustomFields();
 // processPayment();
 // getTransaction();
 
-console.log(Utils.validateName("john doe"));
-console.log(Utils.validateEmail("support@xpay.app"));
+// console.log(Utils.validateName("john doe"));
+// console.log(Utils.validateEmail("support@xpay.app"));
+console.log(Utils.validatePhone("+201111111111"));
 
 function getTransaction() {
   payment
