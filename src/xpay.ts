@@ -5,6 +5,7 @@ import { PayData } from "./interfaces/payData";
 import {
   PaymentMethod,
   PaymentOptionsTotalAmounts,
+  ServerSetting,
 } from "./interfaces/payments";
 import { PrepareAmountData } from "./interfaces/prepareAmountData";
 import { PayBody, PrepareAmountBody, BillingInfo } from "./interfaces/requests";
@@ -21,6 +22,7 @@ export class Xpay {
   apiKey: string;
   communityId: string;
   apiPaymentId: number;
+  serverSetting: ServerSetting;
 
   private _activePaymentMethods: PaymentMethod[];
   public get activePaymentMethods(): PaymentMethod[] {
@@ -32,16 +34,19 @@ export class Xpay {
     return this._PaymentOptionsTotalAmounts;
   }
 
-  constructor(apiKey: string, communityId: string, apiPaymentId: number) {
+  constructor(
+    apiKey: string,
+    communityId: string,
+    apiPaymentId: number,
+    serverSetting?: ServerSetting
+  ) {
     this.apiKey = apiKey;
     this.communityId = communityId;
     this.apiPaymentId = apiPaymentId;
 
+    this.serverSetting = serverSetting ? serverSetting : ServerSetting.Testing;
     this._activePaymentMethods = [];
     this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
-    // this.apiKey = "Cce74Y3B.J0P4tItq7hGu2ddhCB0WF5ND1eTubkpT";
-    // this.communityId = "m2J7eBK";
-    // this.apiPaymentId = 60;
   }
 
   preparePayment(amount: number): Promise<PrepareAmountData> {
@@ -49,22 +54,24 @@ export class Xpay {
       amount: amount,
       community_id: this.communityId,
     };
-    return prepareAmount(prepareAmountBody, this.apiKey).then(
-      (response: AxiosResponse<PrepareAmountResponse>) => {
-        const preparedPayment = response.data.data;
-        // console.log(preparedPayment);
-        if (preparedPayment?.total_amount) {
-          this._activePaymentMethods?.push(PaymentMethod.CARD);
-          this._PaymentOptionsTotalAmounts.card = preparedPayment.total_amount;
-        }
-        if (preparedPayment?.KIOSK?.total_amount) {
-          this._activePaymentMethods?.push(PaymentMethod.KIOSK);
-          this._PaymentOptionsTotalAmounts.kiosk =
-            preparedPayment.KIOSK.total_amount;
-        }
-        return preparedPayment;
+    return prepareAmount(
+      prepareAmountBody,
+      this.apiKey,
+      this.serverSetting
+    ).then((response: AxiosResponse<PrepareAmountResponse>) => {
+      const preparedPayment = response.data.data;
+      // console.log(preparedPayment);
+      if (preparedPayment?.total_amount) {
+        this._activePaymentMethods?.push(PaymentMethod.CARD);
+        this._PaymentOptionsTotalAmounts.card = preparedPayment.total_amount;
       }
-    );
+      if (preparedPayment?.KIOSK?.total_amount) {
+        this._activePaymentMethods?.push(PaymentMethod.KIOSK);
+        this._PaymentOptionsTotalAmounts.kiosk =
+          preparedPayment.KIOSK.total_amount;
+      }
+      return preparedPayment;
+    });
   }
 
   makePayment(
@@ -96,7 +103,7 @@ export class Xpay {
             custom_fields: customFields,
           };
           // request payment
-          return pay(payRequestBody, this.apiKey).then(
+          return pay(payRequestBody, this.apiKey, this.serverSetting).then(
             (response: AxiosResponse<PayResponse>) => {
               const payData = response.data.data;
               // clear current payment settings
@@ -112,13 +119,16 @@ export class Xpay {
   }
 
   getTransaction(uuid: string): Promise<TransactionData> {
-    return getTransactionInfo(uuid, this.apiKey, this.communityId).then(
-      (response: AxiosResponse<TransactionResponse>) => {
-        const preparedPayment = response.data.data;
-        // console.log(preparedPayment);
-        return preparedPayment;
-      }
-    );
+    return getTransactionInfo(
+      uuid,
+      this.apiKey,
+      this.communityId,
+      this.serverSetting
+    ).then((response: AxiosResponse<TransactionResponse>) => {
+      const preparedPayment = response.data.data;
+      // console.log(preparedPayment);
+      return preparedPayment;
+    });
   }
 
   throwError(m: any) {

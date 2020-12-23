@@ -15,7 +15,7 @@ let payment = new Xpay(
 
 // console.log(Utils.validateName("john doe"));
 // console.log(Utils.validateEmail("support@xpay.app"));
-console.log(Utils.validatePhone("+201111111111"));
+// console.log(Utils.validatePhone("+201111111111"));
 
 function getTransaction() {
   payment

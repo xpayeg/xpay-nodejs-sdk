@@ -8,8 +8,7 @@ export interface PaymentOptionsTotalAmounts {
   kiosk: number;
 }
 
-// export class PaymentOptionsTotalAmounts {
-//   card?: number;
-//   kiosk?: number;
-//   constructor() {}
-// }
+export enum ServerSetting {
+  Testing = "testing",
+  PRODUCTION = "production",
+}

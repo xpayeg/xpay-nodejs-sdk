@@ -14,8 +14,6 @@ export namespace Utils {
   }
 
   export function validatePhone(phone: string) {
-    const phoneNumber = parsePhoneNumber(phone);
-
-    return phoneNumber?.isValid() ? true : false;
+    return parsePhoneNumber(phone)?.isValid() ? true : false;
   }
 }
