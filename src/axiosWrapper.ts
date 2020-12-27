@@ -29,6 +29,18 @@ export function prepareAmount(
     headers: {
       "x-api-key": apiKey,
     },
+  }).catch((error) => {
+    if (
+      error.response &&
+      (error.response.status?.toString() === "400" ||
+        error.response.status?.toString() === "403")
+    ) {
+      throw new Error(JSON.stringify(error.response.data?.status?.errors[0]));
+    } else if (error.request) {
+      throw new Error(
+        "The request was made but no response was received, check your network connection"
+      );
+    } else throw error;
   });
 }
 
@@ -53,6 +65,18 @@ export function pay(
     headers: {
       "x-api-key": apiKey,
     },
+  }).catch((error) => {
+    if (
+      error.response &&
+      (error.response.status?.toString() === "400" ||
+        error.response.status?.toString() === "403")
+    ) {
+      throw new Error(JSON.stringify(error.response.data?.status?.errors[0]));
+    } else if (error.request) {
+      throw new Error(
+        "The request was made but no response was received, check your network connection"
+      );
+    } else throw error;
   });
 }
 
@@ -82,4 +106,18 @@ export function getTransactionInfo(
       "x-api-key": apiKey,
     },
   });
+}
+
+function handleErrors(error: any) {
+  if (
+    error.response &&
+    (error.response.status?.toString() === "400" ||
+      error.response.status?.toString() === "403")
+  ) {
+    throw new Error(JSON.stringify(error.response.data?.status?.errors[0]));
+  } else if (error.request) {
+    throw new Error(
+      "The request was made but no response was received, check your network connection"
+    );
+  } else throw error;
 }
