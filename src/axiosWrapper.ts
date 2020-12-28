@@ -7,6 +7,34 @@ import {
   TransactionResponse,
 } from "./interfaces/responses";
 
+axios.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (
+      error.response &&
+      (error.response.status?.toString() === "400" ||
+        error.response.status?.toString() === "403" ||
+        error.response.status?.toString() === "404")
+    ) {
+      return Promise.reject(
+        Error(JSON.stringify(error.response.data?.status?.errors[0]))
+      );
+    } else if (error.response) {
+      return Promise.reject(
+        Error(
+          `server responsed with the following code: ${error.response?.status} and the following message: ${error.response?.statusText}`
+        )
+      );
+    } else if (error.request) {
+      return Promise.reject(
+        Error(
+          "The request was made but no response was received, check your network connection"
+        )
+      );
+    } else Promise.reject(error);
+  }
+);
+
 // prepare amount endpoint
 
 let prepareAmountUrl =
@@ -29,18 +57,6 @@ export function prepareAmount(
     headers: {
       "x-api-key": apiKey,
     },
-  }).catch((error) => {
-    if (
-      error.response &&
-      (error.response.status?.toString() === "400" ||
-        error.response.status?.toString() === "403")
-    ) {
-      throw new Error(JSON.stringify(error.response.data?.status?.errors[0]));
-    } else if (error.request) {
-      throw new Error(
-        "The request was made but no response was received, check your network connection"
-      );
-    } else throw error;
   });
 }
 
@@ -65,18 +81,6 @@ export function pay(
     headers: {
       "x-api-key": apiKey,
     },
-  }).catch((error) => {
-    if (
-      error.response &&
-      (error.response.status?.toString() === "400" ||
-        error.response.status?.toString() === "403")
-    ) {
-      throw new Error(JSON.stringify(error.response.data?.status?.errors[0]));
-    } else if (error.request) {
-      throw new Error(
-        "The request was made but no response was received, check your network connection"
-      );
-    } else throw error;
   });
 }
 
@@ -106,18 +110,4 @@ export function getTransactionInfo(
       "x-api-key": apiKey,
     },
   });
-}
-
-function handleErrors(error: any) {
-  if (
-    error.response &&
-    (error.response.status?.toString() === "400" ||
-      error.response.status?.toString() === "403")
-  ) {
-    throw new Error(JSON.stringify(error.response.data?.status?.errors[0]));
-  } else if (error.request) {
-    throw new Error(
-      "The request was made but no response was received, check your network connection"
-    );
-  } else throw error;
 }

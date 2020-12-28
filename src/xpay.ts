@@ -84,66 +84,82 @@ export class Xpay {
       this._activePaymentMethods.includes(paymentMethod) &&
       this._PaymentOptionsTotalAmounts[paymentMethod]
     ) {
-      if (
-        Utils.validateName(billingInfo.name) &&
-        Utils.validateEmail(billingInfo.email) &&
-        Utils.validatePhone(billingInfo.phone_number)
-      ) {
-        // prepare pay endpoint request body
-        const payRequestBody: PayBody = {
-          community_id: this.communityId,
-          variable_amount_id: this.apiPaymentId,
-          currency: "EGP",
-          amount: this._PaymentOptionsTotalAmounts[paymentMethod],
-          pay_using: paymentMethod,
-          billing_data: billingInfo,
-        };
+      if (Utils.validateName(billingInfo.name)) {
+        if (Utils.validateEmail(billingInfo.email)) {
+          if (Utils.validatePhone(billingInfo.phone_number)) {
+            // prepare pay endpoint request body
+            const payRequestBody: PayBody = {
+              community_id: this.communityId,
+              variable_amount_id: this.apiPaymentId,
+              currency: "EGP",
+              amount: this._PaymentOptionsTotalAmounts[paymentMethod],
+              pay_using: paymentMethod,
+              billing_data: billingInfo,
+            };
 
-        if (customFields) {
-          payRequestBody.custom_fields = customFields;
-        }
+            if (customFields) {
+              payRequestBody.custom_fields = customFields;
+            }
 
-        // request payment
-        return pay(payRequestBody, this.apiKey, this.serverSetting).then(
-          (response: AxiosResponse<PayResponse>) => {
-            // clear current payment settings
-            this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
-            this._activePaymentMethods = [];
-            // return payment info
-            return response.data.data;
+            // request payment
+            return pay(payRequestBody, this.apiKey, this.serverSetting).then(
+              (response: AxiosResponse<PayResponse>) => {
+                // clear current payment settings
+                this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
+                this._activePaymentMethods = [];
+                // return payment info
+                return response.data.data;
+              }
+            );
+          } else {
+            throw new Error(
+              `Phone number: "${billingInfo.phone_number}" provided in billing info is not valid`
+            );
           }
+        } else {
+          throw new Error(
+            `E-mail: "${billingInfo.email}" provided in billing info is not valid`
+          );
+        }
+      } else {
+        throw new Error(
+          `Name: "${billingInfo.name}" provided in billing info is not valid`
         );
-      } else throw new Error("billing info provided is not valid");
-    } else throw new Error("payment method selected is not available");
+      }
+    } else {
+      throw new Error(
+        `payment method selected: "${paymentMethod}" is not available in your community active payment methods: [${this._activePaymentMethods}]`
+      );
+    }
   }
 
-  getTransaction(uuid: string): Promise<TransactionData> {
+  getTransaction(uuid: string) {
     return getTransactionInfo(
       uuid,
       this.apiKey,
       this.communityId,
       this.serverSetting
-    ).then((response: AxiosResponse<TransactionResponse>) => {
+    ).then((response) => {
       return response.data.data;
     });
   }
 
-  // private HandleError(error) {
-  //   if (error.response) {
-  //     // The request was made and the server responded with a status code
-  //     // that falls out of the range of 2xx
-  //     console.log(error.response.data);
-  //     console.log(error.response.status);
-  //     console.log(error.response.headers);
-  //   } else if (error.request) {
-  //     // The request was made but no response was received
-  //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-  //     // http.ClientRequest in node.js
-  //     console.log(error.request);
-  //   } else {
-  //     // Something happened in setting up the request that triggered an Error
-  //     console.log("Error", error.message);
-  //   }
-  //   console.log(error.config);
+  // private verifyBillingInfo(billingInfo: BillingInfo): Boolean {
+  //   if (Utils.validateName(billingInfo.name)) {
+  //     if (Utils.validateEmail(billingInfo.email)) {
+  //       if (Utils.validatePhone(billingInfo.phone_number)) {
+  //         return true;
+  //       } else
+  //         throw new Error(
+  //           `Phone number: "${billingInfo.phone_number}" provided in billing info is not valid`
+  //         );
+  //     } else
+  //       throw new Error(
+  //         `E-mail: "${billingInfo.email}" provided in billing info is not valid`
+  //       );
+  //   } else
+  //     throw new Error(
+  //       `Name: "${billingInfo.name}" provided in billing info is not valid`
+  //     );
   // }
 }
