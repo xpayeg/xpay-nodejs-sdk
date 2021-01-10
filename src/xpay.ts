@@ -1,5 +1,4 @@
-import { AxiosResponse } from "axios";
-import { getTransactionInfo, pay, prepareAmount } from "./axiosWrapper";
+import { AxiosWrapper } from "./axiosWrapper";
 import { Customfield } from "./interfaces/customField";
 import { PayData } from "./interfaces/payData";
 import {
@@ -9,11 +8,6 @@ import {
 } from "./interfaces/payments";
 import { PrepareAmountData } from "./interfaces/prepareAmountData";
 import { PayBody, PrepareAmountBody, BillingInfo } from "./interfaces/requests";
-import {
-  PayResponse,
-  PrepareAmountResponse,
-  TransactionResponse,
-} from "./interfaces/responses";
 import { TransactionData } from "./interfaces/transactionData";
 import { Utils } from "./utils";
 
@@ -52,12 +46,12 @@ export class Xpay {
       amount: amount,
       community_id: this.communityId,
     };
-    return prepareAmount(
+    return AxiosWrapper.prepareAmount(
       prepareAmountBody,
       this.apiKey,
       this.serverSetting
-    ).then((response: AxiosResponse<PrepareAmountResponse>) => {
-      const preparedPayment = response.data.data;
+    ).then((response: PrepareAmountData) => {
+      const preparedPayment = response;
       if (preparedPayment?.total_amount) {
         this._activePaymentMethods?.push(PaymentMethod.CARD);
         this._PaymentOptionsTotalAmounts.card = preparedPayment.total_amount;
@@ -102,15 +96,18 @@ export class Xpay {
             }
 
             // request payment
-            return pay(payRequestBody, this.apiKey, this.serverSetting).then(
-              (response: AxiosResponse<PayResponse>) => {
-                // clear current payment settings
-                this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
-                this._activePaymentMethods = [];
-                // return payment info
-                return response.data.data;
-              }
-            );
+            return AxiosWrapper.pay(
+              payRequestBody,
+              this.apiKey,
+              this.serverSetting
+            ).then((response: PayData) => {
+              // clear current payment settings
+              this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
+              this._activePaymentMethods = [];
+              // return payment info
+              return response;
+              // return response.data.data;
+            });
           } else {
             throw new Error(
               `Phone number: "${billingInfo.phone_number}" provided in billing info is not valid`
@@ -133,33 +130,14 @@ export class Xpay {
     }
   }
 
-  getTransaction(uuid: string) {
-    return getTransactionInfo(
+  getTransaction(uuid: string): Promise<TransactionData> {
+    return AxiosWrapper.getTransactionInfo(
       uuid,
       this.apiKey,
       this.communityId,
       this.serverSetting
     ).then((response) => {
-      return response.data.data;
+      return response;
     });
   }
-
-  // private verifyBillingInfo(billingInfo: BillingInfo): Boolean {
-  //   if (Utils.validateName(billingInfo.name)) {
-  //     if (Utils.validateEmail(billingInfo.email)) {
-  //       if (Utils.validatePhone(billingInfo.phone_number)) {
-  //         return true;
-  //       } else
-  //         throw new Error(
-  //           `Phone number: "${billingInfo.phone_number}" provided in billing info is not valid`
-  //         );
-  //     } else
-  //       throw new Error(
-  //         `E-mail: "${billingInfo.email}" provided in billing info is not valid`
-  //       );
-  //   } else
-  //     throw new Error(
-  //       `Name: "${billingInfo.name}" provided in billing info is not valid`
-  //     );
-  // }
 }

@@ -10,8 +10,8 @@ let payment = new Xpay(
   60
 );
 
-processPayment();
-// getTransaction();
+// processPayment();
+getTransaction();
 
 // console.log(Utils.validateName("john doe"));
 // console.log(Utils.validateEmail("support@xpay.app"));
@@ -30,7 +30,8 @@ function processPayment() {
   payment
     .preparePayment(50)
     .then((res) => {
-      // console.log("preparedPaymentData: ", res);
+      console.log(res);
+      
       printPaymentSettings();
     })
     .then(() => {
