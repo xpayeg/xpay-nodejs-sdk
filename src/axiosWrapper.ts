@@ -1,13 +1,8 @@
-import axios, { AxiosPromise } from "axios";
+import axios from "axios";
 import { PayData } from "./interfaces/payData";
 import { ServerSetting } from "./interfaces/payments";
 import { PrepareAmountData } from "./interfaces/prepareAmountData";
 import { PayBody, PrepareAmountBody } from "./interfaces/requests";
-import {
-  PayResponse,
-  PrepareAmountResponse,
-  TransactionResponse,
-} from "./interfaces/responses";
 import { TransactionData } from "./interfaces/transactionData";
 
 export namespace AxiosWrapper {
