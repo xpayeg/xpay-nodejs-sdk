@@ -1,5 +1,5 @@
-import { Xpay, Utils } from "../dist/index";
-import { PaymentMethod } from "../dist/interfaces/payments";
+import { Xpay, Utils } from "../../dist/index";
+import { PaymentMethod } from "../../dist/interfaces/payments";
 
 console.log("script started!");
 
@@ -9,10 +9,10 @@ let payment = new Xpay(
   60
 );
 
-// processPayment();
-getTransaction();
+processPayment();
+// getTransaction();
 
-console.log(Utils.validateName("john doe"));
+// console.log(Utils.validateName("john doe"));
 // console.log(Utils.validateEmail("support@xpay.app"));
 // console.log(Utils.validatePhone("+201111111111"));
 

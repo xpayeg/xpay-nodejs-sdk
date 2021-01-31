@@ -1,16 +1,15 @@
 import { PrepareAmountData } from "./prepareAmountData";
 import { PayData } from "./payData";
 import { TransactionData } from "./transactionData";
-
-interface Response {
+ interface Response {
   status: {
     code: number;
     message: string;
-    errors: [];
+    errors: any[];
   };
-  count: string;
-  next: string;
-  previous: string;
+  count: string | null;
+  next: string | null;
+  previous: string | null;
 }
 
 export interface PrepareAmountResponse extends Response {

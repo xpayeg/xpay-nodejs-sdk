@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { PayData } from "./interfaces/payData";
 import { ServerSetting } from "./interfaces/payments";
 import { PrepareAmountData } from "./interfaces/prepareAmountData";
 import { PayBody, PrepareAmountBody } from "./interfaces/requests";
+import { PrepareAmountResponse } from "./interfaces/responses";
 import { TransactionData } from "./interfaces/transactionData";
 
 export namespace AxiosWrapper {
@@ -47,16 +48,14 @@ export namespace AxiosWrapper {
     if (server === ServerSetting.PRODUCTION) {
       prepareAmountUrl = prepareAmountUrl.replace("staging", "community");
     }
-    return axios({
-      method: "post",
-      url: prepareAmountUrl,
-      data: {
-        ...prepareAmountBody,
-      },
-      headers: {
-        "x-api-key": apiKey,
-      },
-    }).then((data) => data.data.data);
+
+    return axios
+      .post<PrepareAmountResponse>(prepareAmountUrl, prepareAmountBody, {
+        headers: {
+          "x-api-key": apiKey,
+        },
+      })
+      .then((data) => data.data.data);
   }
 
   // pay endpoint
@@ -71,16 +70,14 @@ export namespace AxiosWrapper {
     if (server === ServerSetting.PRODUCTION) {
       payUrl = payUrl.replace("staging", "community");
     }
-    return axios({
-      method: "post",
-      url: payUrl,
-      data: {
-        ...payBody,
-      },
-      headers: {
-        "x-api-key": apiKey,
-      },
-    }).then((data) => data.data.data);
+
+    return axios
+      .post(payUrl, payBody, {
+        headers: {
+          "x-api-key": apiKey,
+        },
+      })
+      .then((data) => data.data.data);
   }
 
   // transaction endpoint
@@ -102,12 +99,13 @@ export namespace AxiosWrapper {
     if (server === ServerSetting.PRODUCTION) {
       TransactionInfoUrl = TransactionInfoUrl.replace("staging", "community");
     }
-    return axios({
-      method: "get",
-      url: TransactionInfoUrl,
-      headers: {
-        "x-api-key": apiKey,
-      },
-    }).then((data) => data.data.data);
+
+    return axios
+      .get(TransactionInfoUrl, {
+        headers: {
+          "x-api-key": apiKey,
+        },
+      })
+      .then((data) => data.data.data);
   }
 }
