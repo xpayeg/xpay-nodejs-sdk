@@ -1,7 +1,7 @@
 import { Xpay, Utils } from "../../dist/index";
 import { PaymentMethod } from "../../dist/interfaces/payments";
 
-console.log("script started!");
+// console.log("script started!");
 
 let payment = new Xpay(
   "Cce74Y3B.J0P4tItq7hGu2ddhCB0WF5ND1eTubkpT",
