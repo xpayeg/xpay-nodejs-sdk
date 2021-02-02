@@ -1,7 +1,7 @@
 import { AxiosWrapper } from "../src/axiosWrapper";
 import { PaymentMethod, ServerSetting } from "../src/interfaces/payments";
 import { Xpay } from "../src/xpay";
-jest.mock("../src/AxiosWrapper");
+jest.mock("../src/axiosWrapper");
 const mockedAxiosWrapper = AxiosWrapper as jest.Mocked<typeof AxiosWrapper>;
 
 describe("preparePayment method execute successfuly", () => {
