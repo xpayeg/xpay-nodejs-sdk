@@ -1,5 +1,5 @@
 {
-  "name": "xpay-sdk",
+  "name": "xpay-payments-sdk",
   "version": "1.0.0",
   "description": "SDK for using xpay payment services for node js projects",
   "homepage": "https://github.com/xpayeg/xpay-nodejs-sdk",
