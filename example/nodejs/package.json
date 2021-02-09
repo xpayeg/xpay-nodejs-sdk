@@ -1,10 +1,10 @@
 {
-  "name": "xpay-sdk-test",
+  "name": "xpay-sdk-test-commonjs",
   "version": "1.0.0",
-  "description": "",
+  "description": "Example for using Xpay-payments-sdk in commonJS projects",
   "main": "index.js",
   "scripts": {
-    "start": "npm i && node index.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",

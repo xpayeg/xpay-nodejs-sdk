@@ -145,7 +145,7 @@ describe("makePayment method execute successfuly", () => {
             ],
           },
           payment.apiKey,
-          ServerSetting.Testing
+          ServerSetting.TESTING
         );
       });
   });
@@ -180,7 +180,7 @@ describe("makePayment method execute successfuly", () => {
             },
           },
           payment.apiKey,
-          ServerSetting.Testing
+          ServerSetting.TESTING
         );
       });
   });

@@ -1,22 +1,19 @@
-// import { Xpay, Utils } from "xpay-payments-sdk";
-// import { PaymentMethod } from "xpay-payments-sdk";
+const xpay = require("xpay-payments-sdk").Xpay;
+const paymentMethodEnums = require("xpay-payments-sdk").PaymentMethod;
+// const utils = require("xpay-payments-sdk").Utils;
 
-const Xpayment = require("xpay-payments-sdk");
-const paymentMethod = Xpayment.PaymentMethod;
-
-let payment = new Xpayment.Xpay(
+let payment = new xpay(
   "Cce74Y3B.J0P4tItq7hGu2ddhCB0WF5ND1eTubkpT",
   "m2J7eBK",
   60
 );
 
-
 processPayment();
 // getTransaction();
 
-// console.log(Xpayment.Utils.validateName("john doe"));
-// console.log(Utils.validateEmail("support@xpay.app"));
-// console.log(Utils.validatePhone("+201111111111"));
+// console.log(utils.validateName("john do"));
+// console.log(utils.validateEmail("support@xpay.app"));
+// console.log(utils.validatePhone("+201111111111"));
 
 function getTransaction() {
   payment
@@ -37,7 +34,7 @@ function processPayment() {
     })
     .then(() => {
       return payment.makePayment(
-        paymentMethod.KIOSK,
+        paymentMethodEnums.KIOSK,
         {
           name: "Islam Rostom",
           email: "irostom@xpay.app",
@@ -54,19 +51,7 @@ function processPayment() {
       printPaymentSettings();
     })
     .catch((error) => {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data.status.errors[0]);
-        console.log(error.response.status);
-        console.log(error.response.statusText);
-      } else if (error.request) {
-        console.log("The request was made but no response was received");
-        console.log("Request: ", error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
-      }
+      console.log("Error", error.message);
     });
 }
 
