@@ -1,9 +1,10 @@
-import { Xpay, Utils } from "../../dist/index";
-import { PaymentMethod } from "../../dist/interfaces/payments";
+import {
+  Xpay as xpay,
+  Utils,
+  PaymentMethod as paymentMethod,
+} from "xpay-payments-sdk";
 
-// console.log("script started!");
-
-let payment = new Xpay(
+let payment = new xpay(
   "Cce74Y3B.J0P4tItq7hGu2ddhCB0WF5ND1eTubkpT",
   "m2J7eBK",
   60
@@ -30,12 +31,12 @@ function processPayment() {
     .preparePayment(50)
     .then((res) => {
       console.log(res);
-      
+
       printPaymentSettings();
     })
     .then(() => {
       return payment.makePayment(
-        PaymentMethod.KIOSK,
+        paymentMethod.KIOSK,
         {
           name: "Islam Rostom",
           email: "irostom@xpay.app",

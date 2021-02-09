@@ -36,7 +36,7 @@ export class Xpay {
     this.apiKey = apiKey;
     this.communityId = communityId;
     this.apiPaymentId = apiPaymentId;
-    this.serverSetting = serverSetting ? serverSetting : ServerSetting.Testing;
+    this.serverSetting = serverSetting ? serverSetting : ServerSetting.TESTING;
     this._activePaymentMethods = [];
     this._PaymentOptionsTotalAmounts = {} as PaymentOptionsTotalAmounts;
   }

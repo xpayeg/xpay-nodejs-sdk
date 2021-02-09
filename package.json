@@ -1,6 +1,6 @@
 {
   "name": "xpay-payments-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SDK for using xpay payment services for node js projects",
   "homepage": "https://github.com/xpayeg/xpay-nodejs-sdk",
   "license": "ISC",

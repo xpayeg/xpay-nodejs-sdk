@@ -9,6 +9,6 @@ export interface PaymentOptionsTotalAmounts {
 }
 
 export enum ServerSetting {
-  Testing = "testing",
+  TESTING = "testing",
   PRODUCTION = "production",
 }
