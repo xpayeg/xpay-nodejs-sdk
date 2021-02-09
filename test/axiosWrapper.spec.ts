@@ -11,7 +11,7 @@ const communityId = "m2J7eBK";
 
 const apiKey = "Cce74Y3B.J0P4tItq7hGu2ddhCB0WF5ND1eTubkpT";
 
-const server = ServerSetting.Testing;
+const server = ServerSetting.TESTING;
 
 const prepareAmountBody: PrepareAmountBody = {
   amount: 50,
