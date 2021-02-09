@@ -2,12 +2,14 @@ import {
   Xpay as xpay,
   Utils,
   PaymentMethod as paymentMethod,
+  ServerSetting,
 } from "xpay-payments-sdk";
 
 let payment = new xpay(
   "Cce74Y3B.J0P4tItq7hGu2ddhCB0WF5ND1eTubkpT",
   "m2J7eBK",
-  60
+  60,
+  ServerSetting.TESTING
 );
 
 processPayment();
@@ -49,7 +51,7 @@ function processPayment() {
       );
     })
     .then((res) => {
-      console.log("tx info: ", res);
+      console.log("tx info: ", res.message);
       printPaymentSettings();
     })
     .catch((error) => {

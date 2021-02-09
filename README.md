@@ -257,14 +257,12 @@ This methods takes the UUID of the transaction you want to retrieve its data and
 | card  | Number or Null |
 | kiosk | Number or Null |
 
----
-
 ### BillingInfo
 
 | Name  | Type   | Regex pattern                                                        |
 | ----- | ------ | -------------------------------------------------------------------- |
 | name  | string | `/^[a-zA-Z\u0621-\u064A-]{3,}(?:\s[a-zA-Z\u0621-\u064A-]{3,})+\$/`   |
-| email | string | `/ ^[a-z0-9._%+-]+@[a-z.-]+[.][a-z]{2,4}$/`                          |
+| email | string | `/^[a-z0-9._%+-]+@[a-z.-]+[.][a-z]{2,4}$/`                           |
 | phone | string | [E.164 international standard ](https://en.wikipedia.org/wiki/E.164) |
 
 ### CustomField
@@ -276,37 +274,29 @@ This methods takes the UUID of the transaction you want to retrieve its data and
 
 ### PrepareAmountData
 
-#### Properties
-
-| Name                  | Type            |
-| --------------------- | --------------- |
-| total_amount          | number          |
-| total_amount_currency | String          |
-| KIOSK                 | [TotalAmount]() |
-
----
+| Name                  | Type                        |
+| --------------------- | --------------------------- |
+| total_amount          | number                      |
+| total_amount_currency | String                      |
+| KIOSK                 | [TotalAmount](#totalamount) |
 
 ### TotalAmount
-
-#### Properties
 
 | Name                  | Type   |
 | --------------------- | ------ |
 | total_amount          | number |
 | total_amount_currency | String |
 
----
-
 ### PayData
 
-| Property name      | Value   | Description                     | Notes                                                                                                                     |
-| ------------------ | ------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| iframe_url         | string  | iframe url                      | you can either embed that url in your website or redirect your user it so he/she can proceed with the payment process at. |
-| transaction_id     | integer | transaction ID in XPay system   |                                                                                                                           |
-| transaction_uuid   | string  | transaction UUID in XPay system | you can use this value to retrieve transaction info in your app. [see available payment methods](#payment-options)        |
-| transaction_status | string  | transaction status              |
-
----
+| Property name      | Type    |
+| ------------------ | ------- |
+| iframe_url         | string  |
+| transaction_id     | integer |
+| transaction_uuid   | string  |
+| transaction_status | string  |
+| message            | string  |
+| bill_reference     | number  |
 
 ### TransactionData
 
